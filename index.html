@@ -24,7 +24,9 @@
 
         .dark-mode {
             --bg-color: #121212;
-            --text-color: #ffffff;
+            --text-color: #e0e0e0;
+            --dark-color: #e0e0e0;
+            --gray-color: #b0b0b0;
             --section-bg: #1e1e1e;
             --card-bg: #2a2a2a;
             --header-bg: rgba(18, 18, 18, 0.95);
@@ -76,11 +78,41 @@
             cursor: pointer;
         }
         
+        .btn {
+            position: relative;
+            overflow: hidden;
+        }
+        
         .btn:hover {
             background: var(--secondary-color);
             color: white;
             transform: translateY(-3px);
             box-shadow: 0 10px 20px rgba(108, 99, 255, 0.2);
+        }
+        
+        .ripple {
+            position: absolute !important;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.6);
+            transform: scale(0);
+            animation: ripple-animation 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+        
+        @keyframes ripple-animation {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+        
+        /* Theme switch glow effect */
+        .btn.theme-btn {
+            box-shadow: 0 0 20px rgba(253, 120, 5, 0.3);
+        }
+        
+        .dark-mode .btn.theme-btn {
+            box-shadow: 0 0 20px rgba(77, 68, 219, 0.3);
         }
         
         .btn-outline {
@@ -140,7 +172,6 @@
         
         header.scrolled {
             padding: 10px 0;
-            background-color: rgba(255, 255, 255, 0.98);
         }
         
         .navbar {
@@ -171,7 +202,7 @@
         }
         
         .nav-links a {
-            color: var(--dark-color);
+            color: var(--text-color);
             font-weight: 600;
             position: relative;
         }
@@ -197,13 +228,36 @@
         }
         
         /* Hero Section */
-        #hero {
+#hero {
             height: 100vh;
             display: flex;
             align-items: center;
-            background: linear-gradient(135deg, rgba(108, 99, 255, 0.1) 0%, rgba(255, 255, 255, 1) 100%);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             position: relative;
             overflow: hidden;
+        }
+
+        .dark-mode #hero {
+            background: linear-gradient(135deg, rgba(253, 120, 5, 0.8), rgba(77, 68, 219, 0.8));
+        }
+
+        .dark-mode #hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%), 
+                        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%), 
+                        radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.3) 0%, transparent 50%);
+            animation: heroGlow 4s ease-in-out infinite alternate;
+            z-index: 0;
+        }
+
+        @keyframes heroGlow {
+            0% { opacity: 0.5; }
+            100% { opacity: 1; }
         }
         
         .hero-content {
@@ -246,12 +300,13 @@
         }
         
         .hero-image img {
-            max-width: 50%;
+            max-width: 80%;
             height: auto;
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(108, 99, 255, 0.2);
             animation: float 3s ease-in-out infinite;
         }
+
         
         @keyframes float {
             0% {
@@ -310,10 +365,11 @@
         }
         
         .about-image img {
-            max-width: 50%;
+            max-width: 80%;
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         }
+
         
         .about-text {
             flex: 1;
@@ -367,12 +423,17 @@
         }
         
         .service-card {
-            background: white;
+            background: var(--card-bg);
             padding: 30px;
             border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 30px var(--shadow-color);
             transition: all 0.3s ease;
             text-align: center;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .dark-mode .service-card {
+            background: var(--card-bg);
+            border-color: rgba(255,255,255,0.1);
         }
         
         .service-card:hover {
@@ -383,20 +444,41 @@
         .service-icon {
             width: 70px;
             height: 70px;
-            background: rgba(108, 99, 255, 0.1);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 20px;
-            color: var(--primary-color);
             font-size: 1.8rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
         }
+        .service-icon::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.6s;
+        }
+        .service-card:hover .service-icon::before {
+            left: 100%;
+        }
+        .service-icon.html { background: linear-gradient(135deg, #ff6b6b, #feca57); color: white; }
+        .service-icon.css { background: linear-gradient(135deg, #48cae4, #023e8a); color: white; }
+        .service-icon.java { background: linear-gradient(135deg, #f72585, #b5179e); color: white; }
+        .service-icon.sql { background: linear-gradient(135deg, #2a9d8f, #264653); color: white; }
+        .service-icon.uiux { background: linear-gradient(135deg, #7209b7, #560bad); color: white; }
+        .service-icon.js { background: linear-gradient(135deg, #f77f00, #fcbf49); color: white; }
+        .service-icon.responsive { background: linear-gradient(135deg, #1deecb, #06ffa5); color: #2f2e41; }
         
         .service-card h3 {
             font-size: 1.5rem;
             margin-bottom: 15px;
-            color: var(--dark-color);
+            color: var(--text-color);
         }
         
         .service-card p {
@@ -432,75 +514,193 @@
             color: white;
         }
         
-        .portfolio-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 30px;
-        }
-        
-        .portfolio-item {
+        /* New Unique Portfolio Styles - Carousel + Flip Cards + Masonry */
+        .portfolio-wrapper {
             position: relative;
-            border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
         }
         
-        .portfolio-item:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-        }
-        
-        .portfolio-img {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            display: block;
-        }
-        
-        .portfolio-overlay {
+        .timeline {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255, 132, 0, 0.897);
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .portfolio-carousel {
+            scroll-snap-type: x mandatory;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            padding-bottom: 20px;
+        }
+        
+        .portfolio-carousel::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .portfolio-masonry {
+            display: flex;
+            scroll-snap-align: start;
+            gap: 30px;
+            padding: 40px 0;
+            min-height: 500px;
+        }
+        
+        @media (max-width: 992px) {
+            .portfolio-masonry {
+                display: grid !important;
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                grid-auto-rows: 20px;
+            }
+            .portfolio-flip-card {
+                grid-row-end: span 25;
+            }
+            .portfolio-flip-card.tall-card {
+                grid-row-end: span 32;
+            }
+            .portfolio-flip-card.wide-card {
+                grid-column-end: span 2;
+                grid-row-end: span 20;
+            }
+        }
+        
+        .portfolio-flip-card {
+            flex: 0 0 450px;
+            perspective: 1000px;
+            height: 500px;
+            scroll-snap-align: center;
+        }
+        
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+        
+        .portfolio-flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+        
+        .flip-card-front {
+            background: var(--card-bg);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .flip-card-back {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            transform: rotateY(180deg);
+            padding: 30px;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: all 0.3s ease;
+            gap: 15px;
         }
         
-        .portfolio-item:hover .portfolio-overlay {
-            opacity: 1;
-        }
-        
-        .portfolio-overlay h3 {
+        .project-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--primary-color);
             color: white;
-            font-size: 1.5rem;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 2;
+        }
+        
+        .pro-badge {
+            background: var(--success-color);
+        }
+        
+        .design-badge {
+            background: var(--secondary-color);
+        }
+        
+        .flip-card-front img {
+            width: 100%;
+            height: 70%;
+            object-fit: cover;
+        }
+        
+        .flip-card-front h3 {
+            padding: 20px;
+            font-size: 1.4rem;
+            color: var(--dark-color);
+        }
+        
+        .flip-card-back h4 {
+            font-size: 1.3rem;
             margin-bottom: 10px;
         }
         
-        .portfolio-overlay p {
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 20px;
-            text-align: center;
-            padding: 0 20px;
+        .flip-card-back p {
+            opacity: 0.9;
+            line-height: 1.5;
         }
         
-        .portfolio-link {
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+        
+        .tech-tags span {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .project-links {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .project-links a {
             color: white;
-            font-size: 1.2rem;
-            margin: 0 10px;
+            padding: 10px 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 30px;
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
-        .portfolio-link:hover {
-            transform: translateY(-5px);
-            color: var(--dark-color);
+        .project-links a:hover {
+            background: white;
+            color: var(--primary-color);
+            transform: translateY(-3px);
         }
+
+        /* Hide original overlay styles since replaced */
+        .portfolio-overlay { display: none !important; }
         
         /* Testimonials Section */
         .testimonials-container {
@@ -931,7 +1131,7 @@
                     </div>
                 </div>
                 <div class="hero-image">
-                    <img src="./assests/WhatsApp Image 2026-01-12 at 10.51.34 AM.jpeg" alt="DarvinInfantMichael">
+                    <img src="./assests/WhatsApp Image 2026-03-24 at 9.39.09 PM.jpeg" alt="Darvin Infant Michael">
                 </div>
             </div>
         </div>
@@ -944,7 +1144,8 @@
             <p class="section-subtitle">Get to know me better</p>
             <div class="about-content">
                 <div class="about-image">
-                    <img src="./assests/WhatsApp Image 2026-01-12 at 10.51.33 AM.jpeg" alt="About Alex">
+                    <img src="./assests/WhatsApp Image 2026-03-24 at 9.39.15 PM.jpeg" alt="About Darvin">
+
                 </div>
                 <div class="about-text">
                     <h3>Who am I?</h3>
@@ -1000,7 +1201,7 @@
             <p class="section-subtitle">My expertise and proficiency</p>
             <div class="services-grid">
                 <div class="service-card">
-                    <div class="service-icon">
+                    <div class="service-icon html">
                         <i class="fab fa-html5"></i>
                     </div>
                     <h3>HTML</h3>
@@ -1042,11 +1243,18 @@
                     <p>Proficient in JavaScript for interactive web development and dynamic content.</p>
                 </div>
                 <div class="service-card">
-                    <div class="service-icon">
+                    <div class="service-icon responsive">
                         <i class="fas fa-mobile-alt"></i>
                     </div>
                     <h3>Responsive Design</h3>
                     <p>Expert in creating responsive websites that work seamlessly across all devices.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon react">
+                        <i class="fab fa-react"></i>
+                    </div>
+                    <h3>React</h3>
+                    <p>Building dynamic, component-based UIs with modern React.js and state management.</p>
                 </div>
             </div>
         </div>
@@ -1063,52 +1271,101 @@
                 <button class="filter-btn" data-filter="app">App Design</button>
                 <button class="filter-btn" data-filter="graphic">Graphic</button>
             </div>
-            <div class="portfolio-grid">
-                <div class="portfolio-item" data-category="web">
-                    <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="QR Website" class="portfolio-img">
-                    <div class="portfolio-overlay">
-                        <h3>QR Website – Rules for Donating Blood</h3>
-                        <p>Developed a QR-enabled website using HTML, CSS, and React to display blood donation rules with voice-over support for better user understanding.</p>
-                        <div>
-                            <a href="#" class="portfolio-link"><i class="fas fa-link"></i></a>
-                            <a href="#" class="portfolio-link"><i class="fas fa-search"></i></a>
-                        </div>
+<div class="portfolio-wrapper">
+    <!-- Timeline connector -->
+    <svg class="timeline" viewBox="0 0 1200 400" preserveAspectRatio="none">
+        <path d="M 100 200 Q 400 150 700 200 Q 1000 250 1100 200" stroke="var(--primary-color)" stroke-width="2" fill="none" opacity="0.3"/>
+    </svg>
+    
+    <div class="portfolio-carousel" id="portfolioCarousel">
+        <div class="portfolio-masonry">
+            <!-- Project 1: QR Website -->
+            <div class="portfolio-flip-card" data-category="web">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <div class="project-badge">Web</div>
+                        <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-1.2.1&fit=crop&w=500&h=300" alt="QR Website">
+                        <h3>QR Blood Donation Rules</h3>
                     </div>
-                </div>
-                <div class="portfolio-item" data-category="web">
-                    <img src="https://images.unsplash.com/photo-1555774698-0b77e0d5fac6?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Exam Registration System" class="portfolio-img">
-                    <div class="portfolio-overlay">
-                        <h3>Exam Registration System</h3>
-                        <p>A web application to streamline exam scheduling and registration, allowing students to view and register for exams.</p>
-                        <div>
-                            <a href="#" class="portfolio-link"><i class="fas fa-link"></i></a>
-                            <a href="#" class="portfolio-link"><i class="fas fa-search"></i></a>
+                    <div class="flip-card-back">
+                        <h4>QR Website – Rules for Donating Blood</h4>
+                        <p>QR-enabled website using HTML, CSS, React with voice-over support.</p>
+                        <div class="tech-tags">
+                            <span>React</span><span>HTML</span><span>CSS</span><span>Voice API</span>
                         </div>
-                    </div>
-                </div>
-                <div class="portfolio-item" data-category="web">
-                    <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Full Stack Development Internship" class="portfolio-img">
-                    <div class="portfolio-overlay">
-                        <h3>Full Stack Development Internship (openWeaver)</h3>
-                        <p>Worked on frontend development using PHP, CodeIgniter, and jQuery to build dynamic user interfaces with responsive HTML and CSS.</p>
-                        <div>
-                            <a href="#" class="portfolio-link"><i class="fas fa-link"></i></a>
-                            <a href="#" class="portfolio-link"><i class="fas fa-search"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="portfolio-item" data-category="graphic">
-                    <img src="https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="UI/UX Designs" class="portfolio-img">
-                    <div class="portfolio-overlay">
-                        <h3>UI/UX Designs</h3>
-                        <p>Personal designs for LMS, Mobile Banking, and Movie Booking applications.</p>
-                        <div>
-                            <a href="#" class="portfolio-link"><i class="fas fa-link"></i></a>
-                            <a href="#" class="portfolio-link"><i class="fas fa-search"></i></a>
+                        <div class="project-links">
+                            <a href="https://github.com/DarvinInfantMichael" target="_blank"><i class="fab fa-github"></i> Code</a>
+                            <a href="#" onclick="alert('Live demo coming soon!')"><i class="fas fa-external-link-alt"></i> Live</a>
                         </div>
                     </div>
                 </div>
             </div>
+            
+            <!-- Project 2: Exam Registration -->
+            <div class="portfolio-flip-card tall-card" data-category="web">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <div class="project-badge">Web App</div>
+                        <img src="https://images.unsplash.com/photo-1555774698-0b77e0d5fac6?ixlib=rb-1.2.1&fit=crop&w=500&h=400" alt="Exam System">
+                        <h3>Exam Registration</h3>
+                    </div>
+                    <div class="flip-card-back">
+                        <h4>Exam Registration System</h4>
+                        <p>Web app for exam scheduling & registration management.</p>
+                        <div class="tech-tags">
+                            <span>JavaScript</span><span>HTML</span><span>CSS</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" onclick="alert('Demo available on request')"><i class="fas fa-external-link-alt"></i> Demo</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Project 3: Internship -->
+            <div class="portfolio-flip-card" data-category="web">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <div class="project-badge pro-badge">Pro</div>
+                        <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-1.2.1&fit=crop&w=500&h=300" alt="Internship">
+                        <h3>OpenWeaver Internship</h3>
+                    </div>
+                    <div class="flip-card-back">
+                        <h4>Full Stack Development @ openWeaver</h4>
+                        <p>Frontend development with PHP, CodeIgniter, jQuery, responsive HTML/CSS.</p>
+                        <div class="tech-tags">
+                            <span>PHP</span><span>CodeIgniter</span><span>jQuery</span><span>HTML/CSS</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://github.com/DarvinInfantMichael" target="_blank"><i class="fab fa-github"></i> Profile</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Project 4: UI/UX -->
+            <div class="portfolio-flip-card wide-card" data-category="graphic">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <div class="project-badge design-badge">Design</div>
+                        <img src="https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?ixlib=rb-1.2.1&fit=crop&w=600&h=300" alt="UI/UX">
+                        <h3>UI/UX Designs</h3>
+                    </div>
+                    <div class="flip-card-back">
+                        <h4>UI/UX Design Portfolio</h4>
+                        <p>Designs for LMS, Mobile Banking, Movie Booking apps.</p>
+                        <div class="tech-tags">
+                            <span>Figma</span><span>Adobe XD</span><span>UI/UX</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" onclick="alert('Design files available!')"><i class="fas fa-eye"></i> Preview</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
         </div>
     </section>
 
@@ -1128,7 +1385,8 @@
                             </div>
                             <div class="contact-text">
                                 <h4>Email</h4>
-                                <p>darvininfantmichael@example.com</p>
+                                <p>darvininfantmichael.26it@licet.ac.in</p>
+
                             </div>
                         </div>
                         <div class="contact-item">
@@ -1137,7 +1395,8 @@
                             </div>
                             <div class="contact-text">
                                 <h4>Phone</h4>
-                                <p>+91 12345 67890</p>
+                                <p>+91 93427 45599</p>
+
                             </div>
                         </div>
                         <div class="contact-item">
@@ -1177,12 +1436,7 @@
         </div>
     </section>
 
-    <script>
-        const darkThemeBtn = document.getElementById('dark-theme-btn');
-        darkThemeBtn.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-        });
-    </script>
+    <script src="./assests/script.js"></script>
 </body>
 </html>
 
